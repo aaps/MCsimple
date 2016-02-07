@@ -28,7 +28,22 @@ bl_info = {
 class DataExporter:
     
     def run(self, filepath, context):
-        print(filepath, context)
+        current_obj = bpy.context.active_object 
+        
+        f = open(filepath, "w")      
+        model = []
+        for face in current_obj.data.polygons:  
+            verts_in_face = face.vertices[:]  
+            aface = []
+            for vert in verts_in_face:  
+                avert = current_obj.data.vertices[vert].co
+                newvert = round(avert[0],2), round(avert[1],2), round(avert[2],2)
+                aface.append( newvert ) 
+
+            model.append(aface)
+        f.write(repr(model))
+        return {'FINISHED'}
+
 
 
 class MineCraftExport(bpy.types.Operator, ExportHelper):
